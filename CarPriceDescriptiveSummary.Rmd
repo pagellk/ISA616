@@ -1,0 +1,92 @@
+---
+title: "Car Price Descriptive Summary"
+output: html_document
+date: "2024-08-30"
+---
+```{r}
+## load the dataset
+car_price <- read.csv('CarPrice.csv')
+```
+
+```{r}
+## Show summary of all variables in dataset
+summary(car_price)
+```
+
+```{r}
+## show the first few observations in the dataset
+head(car_price)
+```
+
+```{r setup, include=FALSE}
+
+```
+```{r}
+## Check for Missing Values
+missing_values <- car_price |> 
+  dplyr::summarise_all(~ sum(is.na(.)))
+
+print(missing_values)
+```
+There are no missing values in the car prices data set.
+```{r}
+## Check for duplicated rows
+duplicate_rows <- car_price |> 
+  dplyr::filter(duplicated(car_price))
+
+print(duplicate_rows) ## Not sure what to do about this because it does have some different values
+```
+```{r}
+numeric_data <- car_price[sapply(car_price, is.numeric)]
+boxplot(numeric_data, main = "Boxplot of Car Prices Data Set", ylab = "Values", las = 2)
+```
+From creating a boxplot of all predictor variables in the dataset, I can see that variables wheelbase, carlength, cylinder number, stroke, horsepower, peakrpm, citympg, and price have at least one outlier. Let's investigate further.
+```{r}
+boxplot(car_price$wheelbase, main = "Distribution of Wheelbase",
+        ylab = "Values")
+```
+It looks like there are two outliers of the wheelbase variable.
+```{r}
+summary(car_price$wheelbase)
+```
+The values of these two "outliers" do not appear to be that removed from the dataset. Therefore, we will leave them in the dataset.
+```{r}
+boxplot(car_price$carlength, main = "Distribution of Car Length",
+        ylab = "Values")
+```
+Looking at the distribution of values of the car length variable, it appears we have one outlier. Let's take a look at the summary statistics.
+```{r}
+summary(car_price$carlength)
+```
+Evaluate this outlier in more detail**
+```{r}
+## look at this variable more holistically
+boxplot(car_price$cylinder.number, main = "Distribution of cylinder number",
+        ylab = "Values")
+```
+```{r}
+boxplot(car_price$stroke, main = "Distribution of Stroke",
+        ylab = "Values")
+```
+
+The values for the distribution of the stroke do not see like outliers. With some additional research, most cars have a 3-stroke engine. However, a lot of modern cars have a 4-stroke engine and many older cars have a 2-stroke engine. Thus, we can conclude that these values are likely not outliers and are more indicative of the age of the car.
+```{r}
+boxplot(car_price$horsepower, main = "Distribution of Horsepower",
+        ylab = "Values")
+```
+By closely looking the boxplot for the horsepower of an engine, our outliers for this variable appeared to be skewed towards high values in the dataset. By doing some research, the horsepower for car engines most often depends on the size of the car. For small cars, a good horsepower is typically between 100-150. For midsize cars, a good horsepower is around 200. For large cars, a good horsepower is around 300. In addition, a good horsepower for a sports car falls above 300. Thus, these higher values are likely not outliers in the dataset and are likely better indicators of the type of car.
+```{r}
+boxplot(car_price$peakrpm, main = "Distribution of Peak RPM",
+        ylab = "Values")
+summary(car_price$peakrpm)
+```
+From this boxplot, it appears that we have one outlier of peak RPM in our dataset. Research indicates that most modern cars have a peak RPM between 5,000 and 7,000. The maximum value in our data set is an RPM of 6600. Thus,we can conclude that this is an acceptable value. 
+```{r}
+boxplot(car_price$citympg, main = "Distribution of City MPG",
+        ylab = "Values")
+summary(car_price$citympg)
+```
+The two outliers in our boxplot do not appear to be very far away from the range in our boxplot. While it is rather uncommon, it is possible to have a MPG within the range of all of our values. 
+
+
+
