@@ -1,0 +1,102 @@
+---
+title: "CarPrice Descriptive Summary"
+author: "Olivia Bickford"
+date: "2024-09-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(corrplot)
+```
+
+```{r}
+carprice <- read.csv('CarPrice.csv')
+```
+
+
+## Data Structure
+
+```{r}
+str(carprice)
+```
+
+```{r}
+summary(carprice)
+```
+
+```{r}
+head(carprice)
+```
+
+
+## Data Quality
+
+```{r}
+sum(is.na(carprice))
+```
+
+No missing values.
+
+
+```{r}
+sum(duplicated(carprice))
+```
+
+Only two duplicate values
+
+
+```{r}
+numeric_data <- carprice[sapply(carprice, is.numeric)]
+```
+
+```{r}
+boxplot(numeric_data, ylab="Carprice", las=2)
+```
+
+A few have outliers, such as wheelbase, carlength, order.number, stroke, horsepower, peakrpm, citympg and price
+
+
+```{r}
+cor(numeric_data, numeric_data$price)
+```
+
+Correlations from the predictors to the response variable
+
+
+## visualizations
+
+
+Scatter plots with high correlation values
+
+```{r}
+ggplot(numeric_data, aes(x = curbweight, y = price)) +
+  geom_point() +
+  geom_smooth(method = "lm", color = "blue") +
+  scale_color_hue() +
+  theme_classic()
+```
+
+
+```{r}
+ggplot(numeric_data, aes(x = horsepower, y = price)) +
+  geom_point() +
+  geom_smooth(method = "lm", color = "blue") +
+  scale_color_hue() +
+  theme_classic()
+```
+
+
+## Correlation Matrix
+
+```{r}
+car.cor = cor(numeric_data)
+```
+
+```{r}
+corrplot(car.cor, title= "Correlation Matrix")
+```
+
+
+
