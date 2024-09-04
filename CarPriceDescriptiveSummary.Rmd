@@ -10,6 +10,12 @@ date: "2024-09-05"
 ---
 
 ## Data Structure
+
+```{r, include=FALSE}
+library(tidyverse)
+```
+
+
 ```{r}
 ## load the dataset
 car_price <- read.csv('CarPrice.csv')
@@ -46,8 +52,8 @@ Before doing any initial analysis on the data, it is important to understand the
 First, we will check for any missing values in our dataset.
 ```{r}
 ## Check for Missing Values
-missing_values <- car_price |> 
-  dplyr::summarise_all(~ sum(is.na(.)))
+missing_values <- car_price %>% 
+  summarise_all(~ sum(is.na(.)))
 
 print(missing_values)
 ```
@@ -56,8 +62,8 @@ There are no missing values in the car prices data set.
 Next, we will look to see if any of the rows have duplicated values.
 ```{r}
 ## Check for duplicated rows
-duplicate_rows <- car_price |> 
-  dplyr::filter(duplicated(car_price))
+duplicate_rows <- car_price %>%
+  filter(duplicated(car_price))
 
 print(duplicate_rows) 
 ```
@@ -176,10 +182,10 @@ From this block of code, we are able to view the correlations each of our numeri
 From this information, we notice that the predictor variable with the strongest regression relationship with car price is the curbweight of the car. Let's investigate this further.
 ```{r}
 library(ggplot2)
-ggplot(car_price) +
-  aes(x = curbweight, y = price) +
+ggplot(car_price, aes(x = curbweight, y = price)) +
   geom_point() +
-  scale_color_hue()
+  scale_color_hue()+
+  theme_bw()
 ```
 
 As indicated by the correlation coefficient of 0.8353, we see from a scatterplot of the data points that as the weight of the car increases, the overall price of the car also tends to increase. These variables appear to have a relatively strong relationship with one another. There may even be a statistically significant linear relationship between these variables, however further testing and modeling would be needed.
@@ -188,20 +194,20 @@ From the correlation coefficients shown above, horsepower was also showen to be 
 
 ```{r}
 library(ggplot2)
-ggplot(car_price) +
-  aes(x = horsepower, y = price) +
+ggplot(car_price, aes(x = horsepower, y = price)) +
   geom_point() +
-  scale_color_hue()
+  scale_color_hue() +
+  theme_bw()
 ```
 Similar to the curbweight of the car, we find that typically as the horsepower of the car increases, so does its price. These variables also have a relatively strong relationship with one another (r = 0.8081), indicating that there may even be a statistically significant relationship between these predictors, however, more analysis would be needed to prove this.
 
 Let's look at a variable with a relatively low correlation coefficient, stroke.
 ```{r}
 library(ggplot2)
-ggplot(car_price) +
-  aes(x = stroke, y = price) +
+ggplot(car_price, aes(x = stroke, y = price)) +
   geom_point() +
-  scale_color_hue()
+  scale_color_hue() +
+  theme_bw()
 
 ```
 
@@ -224,10 +230,10 @@ Above is a correlation matrix of all of our numeric predictor variables. This pl
 While we were able to examine all of the correlation coefficients for our numeric predictors, we were unable to see if our one categorical predictor, drivewheel has any impact on the car price.
 ```{r}
 library(ggplot2)
-ggplot(car_price) +
-  aes(x = drivewheel, y = price) +
-  geom_point() +
-  scale_color_hue()
+ggplot(car_price, aes(x = drivewheel, y = price)) +
+  geom_boxplot() +
+  scale_color_hue() +
+  theme_bw()
 ```
 
 This plot categorizes the observations by the type of drive wheel it has, either "rear-wheel drive" or "other." From the plot generated, we see that vehicles classified as having a rear-wheel drive typically have a higher car price than those categorized as other. This indicates that there could potentially be a relationship between the drivewheel of a vehicle and car price, however we would still need further analysis.
