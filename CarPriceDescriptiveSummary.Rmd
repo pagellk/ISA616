@@ -1,123 +1,99 @@
 ---
 title: "Car Price Descriptive Summary"
-output:
-    html_document:
+author: "Analysis by: Alyssa Aey, Olivia Bickford, and Lauren Pagel"
+output: 
+  html_document:
     toc: true
-    toc_float: 
-      collpased: false
-      smooth_scroll: false
-    toc_depth: true
-date: 9/3/2024
+    toc_float: true
+    toc_depth: 2
+date: "2024-09-05"
 ---
 
-# Data Structure
+## Data Structure
 ```{r}
 ## load the dataset
-library(tidyverse)
-car_price <- read.csv("CarPrice.csv")
+car_price <- read.csv('CarPrice.csv')
 ```
 
-Once the data set is loaded into the software we first want to examine the structure of the data set. This will give us an idea of what variables are present as well as what types they are as we begin to perform our analysis.
+Once the data set is loaded into the software, we first want to examine the structure of the data set. This will give us an idea of what variables are present, as well as what types they are as we begin to perform our analysis.
 
 ```{r}
 str(car_price)
 ```
-
-From this, we can see that all of our predictor variables are either numeric or an integer besides the drivewheel, which is classified as a character. From this one line of code we are also able to see that we have a total of 205 observations across 11 predictor variables and one response variable.
-
-
+From this, we can see that all of our predictor variables are either numeric or an integer, besides the drivewheel, which is classified as a character. From this one line of code we are also able to see that we have a total of 205 observations across 11 predictor variables and one response variable.
 ```{r}
 head(car_price)
 ```
-
-Shows the first few observations of the dataset.
-
-
+Shows the first few observations of the data set.
 ```{r}
 tail(car_price)
 ```
-
 Shows the last few observations of the car_price data set.
 
-
+## Summary Statistics
 ```{r}
 ## Show summary of all variables in dataset
 summary(car_price)
 ```
 
-This showcases summary statistics for each variable in the model. These summary statistics will be referenced later on when looking for outliers in the dataset and provide useful information about the distribution of values.
+
+This showcases summary statistics for each variable in the model. These summary statistics will be referenced later on when looking for outliers in the data set and provide useful information about the distribution of values.
 
 
-# Data Quality Assessment
-
-Before doing any initial analysis on the data, it is important to understand the overall quality of the current data that we are given. Without quality data, we are unable to run any meaningful studies so it is important that all data quality problems are taken care of immediately.
-
+## Data Quality Assessment
+Before doing any initial analysis on the data, it is important to understand the overall quality of the current data that we are given. Without quality data, we are unable to draw any meaningful conclusions, so it is important that all data quality problems are taken care of immediately.
 
 First, we will check for any missing values in our dataset.
-
 ```{r}
 ## Check for Missing Values
-missing_values <- car_price %>% 
-  summarise_all(~ sum(is.na(.)))
+missing_values <- car_price |> 
+  dplyr::summarise_all(~ sum(is.na(.)))
 
 print(missing_values)
 ```
-
 There are no missing values in the car prices data set.
 
-
-
 Next, we will look to see if any of the rows have duplicated values.
-
 ```{r}
 ## Check for duplicated rows
 duplicate_rows <- car_price |> 
   dplyr::filter(duplicated(car_price))
 
-print(duplicate_rows) ## Not sure what to do about this because it does have some different values
+print(duplicate_rows) 
 ```
+We found that there were two rows duplicated in our data set. However, by looking closer at the values, only 6 out of 11 possible predictor variables were exact duplicates of one another. Because this does not appear to be an exact duplicate of records, we will continue with our analysis.
 
-We found that there were two rows duplicated in our data set. However, by looking closer at the values, only 6/11 of the predictor variables were exact duplicates of one another. Because this does not appear to be an exact duplicate of records, we will continue with our analysis.
-
-Next, to examine the data quality we will check the distribution of predictor variables to see if there are any outliers.
-
+The next step in ensuring data quality is to examine the distribution of predictor variables to see if there are any outliers.
 ```{r}
 numeric_data <- car_price[sapply(car_price, is.numeric)]
 boxplot(numeric_data, main = "Boxplot of Car Prices Data Set", ylab = "Values", las = 2)
 ```
-
-From creating a boxplot of all predictor variables in the dataset, I can see that variables wheelbase, carlength, cylinder number, stroke, horsepower, peakrpm, and citympg have at least one outlier. Let's investigate further.
-
+From creating a boxplot of all predictor variables in the data set, we can see that variables wheelbase, carlength, cylinder number, stroke, horsepower, peakrpm, and citympg have at least one outlier. In addition, our response varaible, price, has at least one outlier present. Let's investigate further.
 ```{r}
 boxplot(car_price$wheelbase, main = "Distribution of Wheelbase",
         ylab = "Values")
 ```
-
 It looks like there are two outliers of the wheelbase variable.
-
 ```{r}
 summary(car_price$wheelbase)
 ```
 
-According to [carparts.com](https://www.carparts.com/blog/what-is-the-wheelbase-and-how-does-it-affect-car-performance/#:~:text=For%20example%2C%20a%20city%20car,typically%20has%20around%20117%20inches) the wheelbase size is typically dependent on the size of the car. For instance, a city car typically has a 95 inch wheelbase while a large SUV has around 117 inches. With a max value of 120.90 inches, our outliers for this variable do not appear to be very far removed from the dataset at all, and are likely a better indication of a larger vehicle. Thus, we will leave these observations in our dataset. 
+According to [carparts.com](https://www.carparts.com/blog/what-is-the-wheelbase-and-how-does-it-affect-car-performance/#:~:text=For%20example%2C%20a%20city%20car,typically%20has%20around%20117%20inches) the wheelbase size is typically dependent on the size of the car. For instance, a city car typically has a 95 inch wheelbase while a large SUV has around 117 inches. With a max value of 120.90 inches, our outliers for this variable do not appear to be very far removed from the dataset at all, and are likely a better indication of a larger vehicle. Thus, we will leave these observations in our data set. 
 
 The next variable we will investigate is the length of the car.
-
 ```{r}
 boxplot(car_price$carlength, main = "Distribution of Car Length",
         ylab = "Values")
 ```
 
 Looking at the distribution of values of the car length variable, it appears we have one outlier. Let's take a look at the summary statistics.
-
 ```{r}
 summary(car_price$carlength)
 ```
 
-According to [carfromjapan.com](https://carfromjapan.com/article/car-maintenance/what-is-the-average-car-length-and-how-to-find-it/), the length of a small car can be anywhere between 118 and 169.3 inches. With this information, we can see that our small outlier clearly falls within the range. We are free to proceed with this data point in our dataset.
+According to [carfromjapan.com](https://carfromjapan.com/article/car-maintenance/what-is-the-average-car-length-and-how-to-find-it/), the length of a small car can be anywhere between 118 and 169.3 inches. With this information, we can see that our small outlier clearly falls within the range. We are free to proceed with this data point in our data set.
 
 The next variable we will look at is the cylinder number of the car.
-
 ```{r}
 ## look at this variable more holistically
 boxplot(car_price$cylinder.number, main = "Distribution of cylinder number",
@@ -127,7 +103,6 @@ boxplot(car_price$cylinder.number, main = "Distribution of cylinder number",
 According to [Kia](https://www.kia.com/dm/discover-kia/ask/what-is-a-cylinder-in-a-car.html#:~:text=The%20cylinder%20consists%20of%20a,6%2C%20or%208%20cylinder%20engine.), most cars have either a 4, 6, or 8, cylinder engine, however it is possible to have more or less than that. With this information, we can determine that we are safe to proceed with these observations in our data.
 
 The next variable with outliers present is the stroke of the engine.
-
 ```{r}
 boxplot(car_price$stroke, main = "Distribution of Stroke",
         ylab = "Values")
@@ -136,26 +111,22 @@ boxplot(car_price$stroke, main = "Distribution of Stroke",
 The values for the distribution of the stroke do not seem like outliers. With some additional research, most cars have a 3-stroke engine. However, a lot of modern cars have a 4-stroke engine and many older cars have a 2-stroke engine.This information was found from [Prime Source](https://primesourceco.com/latest-news/the-difference-between-a-2-stroke-and-4-stroke-engine/#:~:text=While%204%2Dstroke%20engines%20perform,stroke%20is%20more%20fuel%2Defficient). Thus, we can conclude that these values are likely not outliers and are more indicative of the age of the car.
 
 The next variable that we will examine for outliers is the horsepower of the engine.
-
 ```{r}
 boxplot(car_price$horsepower, main = "Distribution of Horsepower",
         ylab = "Values")
 ```
 
-
 By closely looking the boxplot for the horsepower of an engine, our outliers for this variable appeared to be skewed towards high values in the dataset. According to [AutoList](https://www.autolist.com/guides/average-car-horsepower), the horsepower for car engines most often depends on the size of the car. For small cars, a good horsepower is typically between 100-150. For midsize cars, a good horsepower is around 200. For large cars, a good horsepower is around 300. In addition, a good horsepower for a sports car falls above 300. Thus, these higher values are likely not outliers in the dataset and are likely better indicators of the type of car.
 
 The next variable we will examine for outliers is PeakRPM.
-
 ```{r}
 boxplot(car_price$peakrpm, main = "Distribution of Peak RPM",
         ylab = "Values")
 ```
 
-From this boxplot, it appears that we have one outlier of peak RPM in our dataset. According to [Auto Hero](https://www.autohero.com.au/blog/what-does-rpm-mean-in-a-car/#:~:text=What%20is%20maximum%20RPM%20for,lower%20%E2%80%93%20usually%20around%204%2C000RPM.), the peak RPM of a car depends on the type of engine used. For example, petrol engines have a max RPM between 5,000 and 7,000RPM. Diesel engines have a lower max RPM around 4,000RPM, however most cars under normal driving conditions operate between 1,500-3,000RPM. The summary statistics shown earlier indicates a maximum value in our data set of 6600, which we can conclude is an acceptable value to leave in our dataset.
+From this boxplot, it appears that we have one outlier of peak RPM in our dataset. According to [Auto Hero](https://www.autohero.com.au/blog/what-does-rpm-mean-in-a-car/#:~:text=What%20is%20maximum%20RPM%20for,lower%20%E2%80%93%20usually%20around%204%2C000RPM.), the peak RPM of a car depends on the type of engine used. For example, petrol engines have a max RPM between 5,000 and 7,000RPM. Diesel engines have a lower max RPM around 4,000RPM, however most cars under normal driving conditions operate between 1,500-3,000RPM. The summary statistics shown earlier indicates a maximum value in our data set of 6600, which we can conclude is an acceptable value to leave in our data set.
 
 The final predictor variable we will check for outliers is the city miles per gallon.
-
 ```{r}
 boxplot(car_price$citympg, main = "Distribution of City MPG",
         ylab = "Values")
@@ -164,11 +135,19 @@ summary(car_price$citympg)
 
 The two outliers in our boxplot do not appear to be very far away from the range in our boxplot. In addition, according to research from [Car and Driver](https://www.caranddriver.com/research/a31518112/what-is-good-gas-milage/), these outliers are possible potential values for gas mileage and thus should be left in the data.
 
-# Visualizations
+As mentioned previously, our response variable, price, also had a few outliers visible. Let's take a closer look at this:
+```{r}
+boxplot(car_price$price, main = "Distribution of Price",
+        ylab = "Values")
+```
+From this boxplot, it appears that our data is slightly skewed to the right with higher car prices in the data set. According to the summary statistics above, the maximum price of a car in our data is $45,400. [Yahoo Finance](https://finance.yahoo.com/news/car-prices-drop-2024-auto-120055933.html?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAE6-YTs4XuYqnckDJIgBBxcNMXUL9__xXwcnBgqjTZB2fmEts9HnM1pKg00IkW_hSkr2t5shJpiujBZ17VyIIDQwEByhD9gWDIEiIQRh9ZGcUuiV85qGZ-rh_Z0Pc54-UAzRCvrR_KYzm7MPOleOkRxB_wLmf5397P3len-sY1ti) states in their article that the average new car in October of 2023 was selling for $47,936. From this new information, we can take note that as new cars are added to our data set, the car prices will start to shift towards our current outlier values, meaning that it is okay to proceed with these values in our data set.
+
+Now that we have closely checked for data quality in our data set, we will proceed by examining correlations between variables and begin to understand the relationships they may have on car price.
+
+## Visualizations
 This section will primarily focus on building visualizations to better understand the data and correlations between variables.
 
 To start, we will compute the correlations for each numeric predictor variable with the response
-
 ```{r}
 # Identify numeric columns
 numeric_vars <- sapply(car_price, is.numeric)
@@ -195,7 +174,6 @@ print(correlations)
 From this block of code, we are able to view the correlations each of our numeric predictor variables with the response variable, car price. The correlation coefficient, r, indicates the strength and direction of each correlation, with the strongest correlation values approaching either -1 or +1 based on the direction.
 
 From this information, we notice that the predictor variable with the strongest regression relationship with car price is the curbweight of the car. Let's investigate this further.
-
 ```{r}
 library(ggplot2)
 ggplot(car_price) +
@@ -215,11 +193,9 @@ ggplot(car_price) +
   geom_point() +
   scale_color_hue()
 ```
-
 Similar to the curbweight of the car, we find that typically as the horsepower of the car increases, so does its price. These variables also have a relatively strong relationship with one another (r = 0.8081), indicating that there may even be a statistically significant relationship between these predictors, however, more analysis would be needed to prove this.
 
 Let's look at a variable with a relatively low correlation coefficient, stroke.
-
 ```{r}
 library(ggplot2)
 ggplot(car_price) +
@@ -232,7 +208,6 @@ ggplot(car_price) +
 As indicated by its correlation coefficient (r = 0.0794), there is a weak relationship present between stroke and the price of a car. Further analysis would be needed, but this may be an indication of a statistically insignificant relationship between the variables, meaning that an engine's stroke may not be a good indicator of a car's price.
 
 With some of this information, let's generate a correlation matrix.
-
 ```{r}
 # Install the corrplot package if it's not already installed
 if (require(corrplot) == FALSE) install.packages("corrplot")
@@ -247,11 +222,11 @@ corrplot(car.cor)
 Above is a correlation matrix of all of our numeric predictor variables. This plot shows the relationship that all of our predictor variables have with the response as well as the relationships the predictor variables have with one another. This is particularly useful to best understand the relationships present in the dataset for further analysis in the future.
 
 While we were able to examine all of the correlation coefficients for our numeric predictors, we were unable to see if our one categorical predictor, drivewheel has any impact on the car price.
-
 ```{r}
 library(ggplot2)
-ggplot(car_price, aes(x = drivewheel, y = price))+
-  geom_boxplot() +
+ggplot(car_price) +
+  aes(x = drivewheel, y = price) +
+  geom_point() +
   scale_color_hue()
 ```
 
