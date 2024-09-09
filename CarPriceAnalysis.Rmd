@@ -242,13 +242,18 @@ ggplot(car_price) +
 
 This plot categorizes the observations by the type of drive wheel it has, either "rear-wheel drive" or "other." From the plot generated, we see that vehicles classified as having a rear-wheel drive typically have a higher car price than those categorized as other. This indicates that there could potentially be a relationship between the drivewheel of a vehicle and car price, however we would still need further analysis.
 
+
+
 # Observation, Research, Hypothesis
+
 In this section of our analysis, we will focus on developing hypotheses that may be relevant to better understanding the relationships between our predictor variables and car price. 
 
 ## Curb Weight is a Statistically Significant Predictor of Car Price
+
 In the above section, we examined the correlations between each predictor variable and car price. With a correlation coefficient of 0.8353, we see that there is a relatively strong positive correlation between the curb weight of a car and the car price. As the curb weight of the car increases, the car price tends to increase as well.
 
 ### Doing Research
+
 The vehicle's curb weight is defined as the weight of the vehicle. This includes a full tank of fuel and all standard equipment such as motor oil, transmission oil, and brake fluid. This differentiates from a vehicle's gross weight which denotes the total weight from a vehicle when it is fully loaded with passengers, cargo, and additional equipment. 
 
 It is also said that curb weight "acts as a baseline measurement that directly impacts several aspects of vehicle performance." These aspects include fuel efficiency and acceleration. It is said that vehicles with lower curb weights reduce the amount of power required to move the vehicle, which result in less fuel consumed. In addition, lighter vehicles have an advantage when it comes to acceleration. However, when we look at vehicle stability in adverse weather conditions, heavier vehicles hold their ground better. 
@@ -258,8 +263,31 @@ For the most part, larger cars have larger gas tanks than smaller cars. Small ca
 Through research, there is no definitive answer as to how the size of a car's gas tank and the price of the car are related. However, we can say that as the size of gas tanks increase, so does the overall curbweight of the car. Perhaps the extra sales price that is shown from the positive correlation is a better result of the additional materials cost to build a larger car.
 
 ### Testing this Hypothesis
+
 In order to test this hypothesis, we want to run a regression model to show its validity. Our regression model will use curbweight as the predictor variable and car price as the repsonse variable. From there we will run a one-sample t-test to examine whether there is a significant regression relationship between curbweight and car price.
 
+
+## Horsepower and Amount of Cylinders is a Statistically Significant Predictor of Car Price
+
+Above horsepower and price have a positive correlation of 0.808 so we see there is a strong, positive linear correlation between these two variables. So, as the horsepower of a car increases the price tends to increase. Between amount of cylinders and price, there is also a strong positive correlation of 0.718. This means that as the price increases as the amount of cylinders increases. On the correlation plot, horsepower and the amount of cylinders has a strong positive linear association. 
+
+
+### Doing Research
+
+Horsepower is the power of the engines and the rate at which work is done. Horsepower sustains the momentum and higher rate of work once the car is moving. The higher the horse power, the faster the engine will accelerate at speed. Horsepower shows the performance of a car, an engine with more horsepower will accelerate more quickly and can lead to more towing reliability. With this however, higher horsepower can often lead to lower gas mileage and efficiency. 
+
+The cylinder is the power unit of the engine and there are usually 4, 6 or 8 in a car. These take fuel and burn it so it is turned into energy that in turn powers the vehicle. It has the base of a piston that moves the cylinder up and down to form the reaction and combustion. The more cylinders means more pistons leading to more fuel being turned into power. 
+
+With research there seems to be no definitive answers about horsepower and cylinder are related to a higher car price. However, it seems that the more horsepower the car is stronger and the more cylinders there are the more gas and power the car is producing. The additional price increase could be due to more advanced and powerful technology required for having a higher horsepower. The higher the performance could require more expensive components in order for the car to preform up to standard. The more cylinders usually means larger engines in order to fit everything properly so there could be an increased in the complexity of materials needed to fit multiple cylinders. 
+
+Thinking about fuel efficiency, cars with larger engines have a lower fuel efficiency and higher emissions due to the amount of gas required to power the car. With many business and governments putting rules in place about environmental regulations, the manufacturer might have to add an increase in price to comply with the rules due to cars with more horsepower and more cylinders that could contribute more to carbon emissions. 
+
+
+### Testing this Hypothesis
+
+In order to test this hypothesis a multiple regression could be used to model the relationship since there are strong positive correlation values between the variables and adding in interaction terms to see if horsepower depends on the number of cylinders or vise versa. 
+
+Our model would use horsepower and number of cylinders as predictor variables and car price as the response. We would use a one sample t-test to compare the average prices and see if there is a significant relationship between the two variables and the predictor. From there we would assess the model fit with R-squared values, residual analysis and test sets. 
 
 
 
