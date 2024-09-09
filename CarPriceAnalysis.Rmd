@@ -1,0 +1,268 @@
+---
+title: "Car Price Analysis"
+author: "Analysis by: Alyssa Aey, Olivia Bickford, and Lauren Pagel"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+date: "2024-09-05"
+---
+
+
+In this analysis, we will be exploring one set of data that is focused on different car features that may impact the sale price of a car. The set of data is taken from different car observations.
+
+The data set we will be examining consists of 12 variables, 11 of which are classified as predictor variables. 11 of these variables are observatory, while 1, symboling, represents an assigned insurance risk rating for the vehicle.
+
+This data set will be read into R from a CSV file and will be named as car_price during our analysis.
+
+# Descriptive Summary
+
+## Data Structure
+```{r}
+## load the dataset
+car_price <- read.csv('CarPrice.csv')
+```
+
+Once the data set is loaded into the software, we first want to examine the structure of the data set. This will give us an idea of what variables are present, as well as what types they are as we begin to perform our analysis.
+
+```{r}
+str(car_price)
+```
+From this, we can see that all of our predictor variables are either numeric or an integer, besides the drivewheel, which is classified as a character. From this one line of code we are also able to see that we have a total of 205 observations across 11 predictor variables and one response variable.
+```{r}
+head(car_price)
+```
+Shows the first few observations of the data set.
+```{r}
+tail(car_price)
+```
+Shows the last few observations of the car_price data set.
+
+## Summary Statistics
+```{r}
+## Show summary of all variables in dataset
+summary(car_price)
+```
+
+
+This showcases summary statistics for each variable in the model. These summary statistics will be referenced later on when looking for outliers in the data set and provide useful information about the distribution of values.
+
+
+## Data Quality Assessment
+Before doing any initial analysis on the data, it is important to understand the overall quality of the current data that we are given. Without quality data, we are unable to draw any meaningful conclusions, so it is important that all data quality problems are taken care of immediately.
+
+First, we will check for any missing values in our dataset.
+```{r}
+## Check for Missing Values
+missing_values <- car_price |> 
+  dplyr::summarise_all(~ sum(is.na(.)))
+
+print(missing_values)
+```
+There are no missing values in the car prices data set.
+
+Next, we will look to see if any of the rows have duplicated values.
+```{r}
+## Check for duplicated rows
+duplicate_rows <- car_price |> 
+  dplyr::filter(duplicated(car_price))
+
+print(duplicate_rows) 
+```
+We found that there were two rows duplicated in our data set. However, by looking closer at the values, only 6 out of 11 possible predictor variables were exact duplicates of one another. Because this does not appear to be an exact duplicate of records, we will continue with our analysis.
+
+The next step in ensuring data quality is to examine the distribution of predictor variables to see if there are any outliers.
+```{r}
+numeric_data <- car_price[sapply(car_price, is.numeric)]
+boxplot(numeric_data, main = "Boxplot of Car Prices Data Set", ylab = "Values", las = 2)
+```
+
+From creating a boxplot of all predictor variables in the data set, we can see that variables wheelbase, carlength, cylinder number, stroke, horsepower, peakrpm, and citympg have at least one outlier. In addition, our response varaible, price, has at least one outlier present. Let's investigate further.
+```{r}
+boxplot(car_price$wheelbase, main = "Distribution of Wheelbase",
+        ylab = "Values")
+```
+It looks like there are two outliers of the wheelbase variable.
+```{r}
+summary(car_price$wheelbase)
+```
+
+According to [carparts.com](https://www.carparts.com/blog/what-is-the-wheelbase-and-how-does-it-affect-car-performance/#:~:text=For%20example%2C%20a%20city%20car,typically%20has%20around%20117%20inches) the wheelbase size is typically dependent on the size of the car. For instance, a city car typically has a 95 inch wheelbase while a large SUV has around 117 inches. With a max value of 120.90 inches, our outliers for this variable do not appear to be very far removed from the dataset at all, and are likely a better indication of a larger vehicle. Thus, we will leave these observations in our data set. 
+
+The next variable we will investigate is the length of the car.
+```{r}
+boxplot(car_price$carlength, main = "Distribution of Car Length",
+        ylab = "Values")
+```
+
+Looking at the distribution of values of the car length variable, it appears we have one outlier. Let's take a look at the summary statistics.
+```{r}
+summary(car_price$carlength)
+```
+
+According to [carfromjapan.com](https://carfromjapan.com/article/car-maintenance/what-is-the-average-car-length-and-how-to-find-it/), the length of a small car can be anywhere between 118 and 169.3 inches. With this information, we can see that our small outlier clearly falls within the range. We are free to proceed with this data point in our data set.
+
+The next variable we will look at is the cylinder number of the car.
+```{r}
+## look at this variable more holistically
+boxplot(car_price$cylinder.number, main = "Distribution of cylinder number",
+        ylab = "Values")
+```
+
+According to [Kia](https://www.kia.com/dm/discover-kia/ask/what-is-a-cylinder-in-a-car.html#:~:text=The%20cylinder%20consists%20of%20a,6%2C%20or%208%20cylinder%20engine.), most cars have either a 4, 6, or 8, cylinder engine, however it is possible to have more or less than that. With this information, we can determine that we are safe to proceed with these observations in our data.
+
+The next variable with outliers present is the stroke of the engine.
+```{r}
+boxplot(car_price$stroke, main = "Distribution of Stroke",
+        ylab = "Values")
+```
+
+The values for the distribution of the stroke do not seem like outliers. With some additional research, most cars have a 3-stroke engine. However, a lot of modern cars have a 4-stroke engine and many older cars have a 2-stroke engine.This information was found from [Prime Source](https://primesourceco.com/latest-news/the-difference-between-a-2-stroke-and-4-stroke-engine/#:~:text=While%204%2Dstroke%20engines%20perform,stroke%20is%20more%20fuel%2Defficient). Thus, we can conclude that these values are likely not outliers and are more indicative of the age of the car.
+
+The next variable that we will examine for outliers is the horsepower of the engine.
+```{r}
+boxplot(car_price$horsepower, main = "Distribution of Horsepower",
+        ylab = "Values")
+```
+
+By closely looking the boxplot for the horsepower of an engine, our outliers for this variable appeared to be skewed towards high values in the dataset. According to [AutoList](https://www.autolist.com/guides/average-car-horsepower), the horsepower for car engines most often depends on the size of the car. For small cars, a good horsepower is typically between 100-150. For midsize cars, a good horsepower is around 200. For large cars, a good horsepower is around 300. In addition, a good horsepower for a sports car falls above 300. Thus, these higher values are likely not outliers in the dataset and are likely better indicators of the type of car.
+
+The next variable we will examine for outliers is PeakRPM.
+```{r}
+boxplot(car_price$peakrpm, main = "Distribution of Peak RPM",
+        ylab = "Values")
+```
+
+From this boxplot, it appears that we have one outlier of peak RPM in our dataset. According to [Auto Hero](https://www.autohero.com.au/blog/what-does-rpm-mean-in-a-car/#:~:text=What%20is%20maximum%20RPM%20for,lower%20%E2%80%93%20usually%20around%204%2C000RPM.), the peak RPM of a car depends on the type of engine used. For example, petrol engines have a max RPM between 5,000 and 7,000RPM. Diesel engines have a lower max RPM around 4,000RPM, however most cars under normal driving conditions operate between 1,500-3,000RPM. The summary statistics shown earlier indicates a maximum value in our data set of 6600, which we can conclude is an acceptable value to leave in our data set.
+
+The final predictor variable we will check for outliers is the city miles per gallon.
+```{r}
+boxplot(car_price$citympg, main = "Distribution of City MPG",
+        ylab = "Values")
+summary(car_price$citympg)
+```
+
+The two outliers in our boxplot do not appear to be very far away from the range in our boxplot. In addition, according to research from [Car and Driver](https://www.caranddriver.com/research/a31518112/what-is-good-gas-milage/), these outliers are possible potential values for gas mileage and thus should be left in the data.
+
+As mentioned previously, our response variable, price, also had a few outliers visible. Let's take a closer look at this:
+```{r}
+boxplot(car_price$price, main = "Distribution of Price",
+        ylab = "Values")
+```
+From this boxplot, it appears that our data is slightly skewed to the right with higher car prices in the data set. According to the summary statistics above, the maximum price of a car in our data is $45,400. [Yahoo Finance](https://finance.yahoo.com/news/car-prices-drop-2024-auto-120055933.html?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAE6-YTs4XuYqnckDJIgBBxcNMXUL9__xXwcnBgqjTZB2fmEts9HnM1pKg00IkW_hSkr2t5shJpiujBZ17VyIIDQwEByhD9gWDIEiIQRh9ZGcUuiV85qGZ-rh_Z0Pc54-UAzRCvrR_KYzm7MPOleOkRxB_wLmf5397P3len-sY1ti) states in their article that the average new car in October of 2023 was selling for $47,936. From this new information, we can take note that as new cars are added to our data set, the car prices will start to shift towards our current outlier values, meaning that it is okay to proceed with these values in our data set.
+
+Now that we have closely checked for data quality in our data set, we will proceed by examining correlations between variables and begin to understand the relationships they may have on car price.
+
+## Visualizations
+This section will primarily focus on building visualizations to better understand the data and correlations between variables.
+
+To start, we will compute the correlations for each numeric predictor variable with the response
+```{r}
+# Identify numeric columns
+numeric_vars <- sapply(car_price, is.numeric)
+
+# Extract only numeric columns
+car_price_numeric <- car_price[, numeric_vars]
+
+# Extract the dependent variable 'price'
+dependent_var <- car_price_numeric$price
+
+# Compute correlations with the dependent variable
+correlations <- sapply(car_price_numeric, function(x) {
+  if (identical(x, dependent_var)) {
+    NA  # Skip the correlation of 'price' with itself
+  } else {
+    cor(x, dependent_var, use = "complete.obs")
+  }
+})
+
+# Print correlations
+print(correlations)
+```
+
+From this block of code, we are able to view the correlations each of our numeric predictor variables with the response variable, car price. The correlation coefficient, r, indicates the strength and direction of each correlation, with the strongest correlation values approaching either -1 or +1 based on the direction.
+
+From this information, we notice that the predictor variable with the strongest regression relationship with car price is the curbweight of the car. Let's investigate this further.
+```{r}
+library(ggplot2)
+ggplot(car_price) +
+  aes(x = curbweight, y = price) +
+  geom_point() +
+  scale_color_hue()
+```
+
+As indicated by the correlation coefficient of 0.8353, we see from a scatterplot of the data points that as the weight of the car increases, the overall price of the car also tends to increase. These variables appear to have a relatively strong relationship with one another. There may even be a statistically significant linear relationship between these variables, however further testing and modeling would be needed.
+
+From the correlation coefficients shown above, horsepower was also showen to be a relatively strong predictor of car price. Let's examine its scatterplot.
+
+```{r}
+library(ggplot2)
+ggplot(car_price) +
+  aes(x = horsepower, y = price) +
+  geom_point() +
+  scale_color_hue()
+```
+Similar to the curbweight of the car, we find that typically as the horsepower of the car increases, so does its price. These variables also have a relatively strong relationship with one another (r = 0.8081), indicating that there may even be a statistically significant relationship between these predictors, however, more analysis would be needed to prove this.
+
+Let's look at a variable with a relatively low correlation coefficient, stroke.
+```{r}
+library(ggplot2)
+ggplot(car_price) +
+  aes(x = stroke, y = price) +
+  geom_point() +
+  scale_color_hue()
+
+```
+
+As indicated by its correlation coefficient (r = 0.0794), there is a weak relationship present between stroke and the price of a car. Further analysis would be needed, but this may be an indication of a statistically insignificant relationship between the variables, meaning that an engine's stroke may not be a good indicator of a car's price.
+
+With some of this information, let's generate a correlation matrix.
+```{r}
+# Install the corrplot package if it's not already installed
+if (require(corrplot) == FALSE) install.packages("corrplot")
+
+# Load the corrplot package
+corrplot::corrplot(cor(car_price_numeric))
+
+car.cor = cor(car_price_numeric)
+corrplot(car.cor)
+```
+
+Above is a correlation matrix of all of our numeric predictor variables. This plot shows the relationship that all of our predictor variables have with the response as well as the relationships the predictor variables have with one another. This is particularly useful to best understand the relationships present in the dataset for further analysis in the future.
+
+While we were able to examine all of the correlation coefficients for our numeric predictors, we were unable to see if our one categorical predictor, drivewheel has any impact on the car price.
+```{r}
+library(ggplot2)
+ggplot(car_price) +
+  aes(x = drivewheel, y = price) +
+  geom_point() +
+  scale_color_hue()
+```
+
+This plot categorizes the observations by the type of drive wheel it has, either "rear-wheel drive" or "other." From the plot generated, we see that vehicles classified as having a rear-wheel drive typically have a higher car price than those categorized as other. This indicates that there could potentially be a relationship between the drivewheel of a vehicle and car price, however we would still need further analysis.
+
+# Observation, Research, Hypothesis
+In this section of our analysis, we will focus on developing hypotheses that may be relevant to better understanding the relationships between our predictor variables and car price. 
+
+## Curb Weight is a Statistically Significant Predictor of Car Price
+In the above section, we examined the correlations between each predictor variable and car price. With a correlation coefficient of 0.8353, we see that there is a relatively strong positive correlation between the curb weight of a car and the car price. As the curb weight of the car increases, the car price tends to increase as well.
+
+### Doing Research
+The vehicle's curb weight is defined as the weight of the vehicle. This includes a full tank of fuel and all standard equipment such as motor oil, transmission oil, and brake fluid. This differentiates from a vehicle's gross weight which denotes the total weight from a vehicle when it is fully loaded with passengers, cargo, and additional equipment. 
+
+It is also said that curb weight "acts as a baseline measurement that directly impacts several aspects of vehicle performance." These aspects include fuel efficiency and acceleration. It is said that vehicles with lower curb weights reduce the amount of power required to move the vehicle, which result in less fuel consumed. In addition, lighter vehicles have an advantage when it comes to acceleration. However, when we look at vehicle stability in adverse weather conditions, heavier vehicles hold their ground better. 
+
+For the most part, larger cars have larger gas tanks than smaller cars. Small cars usually hold up to 12 gallons gas, some larger cars can carry 15 gallons of gas, and many larger trucks can hold anywhere from 21-38 gallons of gas. 
+
+Through research, there is no definitive answer as to how the size of a car's gas tank and the price of the car are related. However, we can say that as the size of gas tanks increase, so does the overall curbweight of the car. Perhaps the extra sales price that is shown from the positive correlation is a better result of the additional materials cost to build a larger car.
+
+### Testing this Hypothesis
+In order to test this hypothesis, we want to run a regression model to show its validity. Our regression model will use curbweight as the predictor variable and car price as the repsonse variable. From there we will run a one-sample t-test to examine whether there is a significant regression relationship between curbweight and car price.
+
+
+
+
+
+
+
