@@ -242,18 +242,13 @@ ggplot(car_price) +
 
 This plot categorizes the observations by the type of drive wheel it has, either "rear-wheel drive" or "other." From the plot generated, we see that vehicles classified as having a rear-wheel drive typically have a higher car price than those categorized as other. This indicates that there could potentially be a relationship between the drivewheel of a vehicle and car price, however we would still need further analysis.
 
-
-
 # Observation, Research, Hypothesis
-
 In this section of our analysis, we will focus on developing hypotheses that may be relevant to better understanding the relationships between our predictor variables and car price. 
 
 ## Curb Weight is a Statistically Significant Predictor of Car Price
-
 In the above section, we examined the correlations between each predictor variable and car price. With a correlation coefficient of 0.8353, we see that there is a relatively strong positive correlation between the curb weight of a car and the car price. As the curb weight of the car increases, the car price tends to increase as well.
 
 ### Doing Research
-
 The vehicle's curb weight is defined as the weight of the vehicle. This includes a full tank of fuel and all standard equipment such as motor oil, transmission oil, and brake fluid. This differentiates from a vehicle's gross weight which denotes the total weight from a vehicle when it is fully loaded with passengers, cargo, and additional equipment. 
 
 It is also said that curb weight "acts as a baseline measurement that directly impacts several aspects of vehicle performance." These aspects include fuel efficiency and acceleration. It is said that vehicles with lower curb weights reduce the amount of power required to move the vehicle, which result in less fuel consumed. In addition, lighter vehicles have an advantage when it comes to acceleration. However, when we look at vehicle stability in adverse weather conditions, heavier vehicles hold their ground better. 
@@ -263,9 +258,7 @@ For the most part, larger cars have larger gas tanks than smaller cars. Small ca
 Through research, there is no definitive answer as to how the size of a car's gas tank and the price of the car are related. However, we can say that as the size of gas tanks increase, so does the overall curbweight of the car. Perhaps the extra sales price that is shown from the positive correlation is a better result of the additional materials cost to build a larger car.
 
 ### Testing this Hypothesis
-
 In order to test this hypothesis, we want to run a regression model to show its validity. Our regression model will use curbweight as the predictor variable and car price as the repsonse variable. From there we will run a one-sample t-test to examine whether there is a significant regression relationship between curbweight and car price.
-
 
 ## Horsepower and Amount of Cylinders is a Statistically Significant Predictor of Car Price
 
@@ -288,6 +281,37 @@ Thinking about fuel efficiency, cars with larger engines have a lower fuel effic
 In order to test this hypothesis a multiple regression could be used to model the relationship since there are strong positive correlation values between the variables and adding in interaction terms to see if horsepower depends on the number of cylinders or vise versa. 
 
 Our model would use horsepower and number of cylinders as predictor variables and car price as the response. We would use a one sample t-test to compare the average prices and see if there is a significant relationship between the two variables and the predictor. From there we would assess the model fit with R-squared values, residual analysis and test sets. 
+
+## Curb Weight and Horsepower are statistically significant predictors of a City MPG
+We generated this hypothesis from the results of our correlation matrix. From this we noticed that there were relatively large negative correlations between these variables. 
+```{r}
+cor(car_price$curbweight, car_price$citympg, use = "complete.obs")
+```
+This line of code shows that curb weight has a relatively strong negative relationship with city mpg. This means that as curb weight tends to increase, the miles per gallon the car gets tends to decrease.
+```{r}
+cor(car_price$horsepower, car_price$citympg, use = "complete.obs")
+```
+This line of code confirms what we have seen from our correlation matrix and even suggests that horsepower is a stronger predictor of city mpg than the curb weight of the car is. We will continue to work with our hypothesis that both are strong predictors of city mpg, but horsepower may even be one on its own.
+
+### Doing Research
+One critical factor that we saw from doing research on both horsepower and the curb weight of the car is something called a [Power to Weight Ratio](https://www.jtech.org/power-to-weight-ratio-and-how-it-affects-performance/). Essentially, the power to weight ratio is calculated by dividing the horsepower of the car by the weight of the car. According to the article, the ideal performance of a car is lighter in curb weight but high in the amount of horsepower.
+
+Of course, it depends how you would want to describe vehicle performance, which could mean different things depending on the context of the situation. In this scenario, we will be looking at vehicle performance in the context of miles per gallon the vehicle is able to get.
+
+Regression analyses has been done to show the regression relationship between both horsepower, curb weight, and city mpg. In a study done by [Fort Hays State University](https://scholars.fhsu.edu/cgi/viewcontent.cgi?article=1427&context=sacad), both the weight and horsepower of a car are shown to be statistically significant predictors of the fuel efficiency (mpg) of a vehicle. 
+
+Other [studies](https://finelineimports.net/2019/10/does-more-horsepower-mean-fewer-mpg/) have shown the exact opposite, that horsepower is not an issue that can affect fuel economy. This approach claims that there are a variety of other factors that impact a vehicle's fuel efficiency such as "easing off of the accelerator, cutting down on some of the weight inside your vehicle, keeping tires inflated to the proper pressure, reducing drag as much as possible, and taking routes you won't have to stop as frequently." 
+
+Because of the mixed results we found through our outside research, particularly in regards to horsepower, it makes it all the more important to test our hypothesis on our own data set before jumping to any conclusions.
+
+### Testing this Hypothesis
+
+In order to test this hypothesis, we will build a multiple regression model using both horsepower and curbweight as predictor variables and city miles per gallon as the response variable. 
+
+After building the regression model, we will examine the F test statistic in order to determine the overall model significance. In addition, measures such as the adjusted R2 and RMSE will provide insight into how well our model performs. In addition, one-sample t-tests can be performed on each predictor variable in order to test their individual significance to the model.
+
+
+
 
 
 
