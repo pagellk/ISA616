@@ -313,21 +313,69 @@ After building the regression model, we will examine the F test statistic in ord
 Now that we have identified, three potential hypotheses to test we need to test them to see if they hold true in our model
 
 ## Curb Weight is a Statistically Significant Predictor of Car Price
-
-reg1=lm(price~curbweight, data = car_price)
+```{r, include = FALSE}
+reg1 = lm(price~curbweight, data = car_price )
 options(scipen = 999)
 summary(reg1)
-anova(reg1)
-
-## Horsepower and Amount of Cylinders is a Statistically Significant Predictor of Car Price
-
-```{r, echo = FALSE}
-Model1 <- lm(price ~ horsepower + cylinder.number + horsepower:cylinder.number, data = car_price)
+anova(reg1) ## SSE
 ```
 
 
-### Establishing Null and Alternative Hypothesis
+### Establishing Our Null and Alternative Hypothesis
+As we discussed above, we planning on building a regression model using curb weight as a predictor of car price. We will then run a t-test to test the overall significance of curb weight as a predictor variable
 
+In order to test the significance of curb weight as a predictor of car price we will establish the null and alternative hypothesis as such:
+- Null Hypothesis: β1 = 0. This means that curb weight is not a significant predictor of car price
+- Alternative Hypothesis: β1 ≠ 0. This means that curb weight is a significant predictor of car price.
+
+### Checking our Assumptions
+Now that we have established both our null and alternative hypothesis, we will proceed by checking our assumptions of linear regression.
+
+#### The Mean of ε is ZERO
+The first assumption that we will check is that the mean of the error term, ε, is zero. This assumption means that the model is not biased.
+```{r}
+residuals_1 = reg1$residuals
+mean(residuals_1)
+```
+
+#### Constant Variance
+```{r, echo = FALSE}
+library(ggplot2)
+ggplot(reg1, aes(.fitted, .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(x = "Fitted values", y = "Residuals") +
+  ggtitle("Residuals vs Fitted")
+```
+
+This assumption may not hold exactly because we can see that the residuals do not have constant variance for all values.
+
+#### Error Term is Normal
+```{r}
+plot(reg1, 2)
+```
+
+From the QQ plot above, with its distribution, we can conclude that the assumption that the error term of ε is mostly normal with some of the data points being slightly under or below the line.
+
+#### ϵi are Independent
+In order to test this assumption, we would need to have a time variable included in the model. However, there is no time variable in the regression model to test this hypothesis.
+
+### Performing our Test
+Now that we have checked our assumptions, we will move forward with reporting our test statistic and p-value for our tests. It will be important to note that we will need to proceed with caution because assumption 2, constant variance, is not met within our current data set.
+
+```{r}
+summary(reg1)
+```
+As noted earlier, we will be reporting on the one-sample t test for our hypothesis test. With a t-value of 21.65, and a p-value of close to 0, which is less than our alpha level, 0.01, we reject the null hypothesis. We have sufficient evidence to show that curb weight is a significant predictor of car price based on our sample. However, we should proceed with caution because not all of our assumptions were met.
+
+
+## Horsepower and Amount of Cylinders is a Statistically Significant Predictor of Car Price
+```{r}
+reg2 <- lm(price ~ horsepower + cylinder.number + horsepower:cylinder.number, data = car_price)
+```
+
+
+### Establishing our Null and Alternative Hypothesis
 As we discussed above, we plan on running an F-test to test the overall significance of both the horsepower of the car, the amount of cylinders and the interaction between them as a predictor of car price.
 
 
@@ -342,85 +390,59 @@ In addition to testing the significance of the overall regression model, we will
 In addition to testing the significance of the overall regression model, we will test the significance of the interaction terms between the number of cylinders and horsepower. We will use a t-test to compute these test statistics with the null and alternative hypothesis as such:
   - Null Hypothesis: βn = 0. This means that the interaction term we are examining is not significant in our model.
   - Alternative Hypothesis: βn ≠ 0. This means that the interaction term is significant in the overall model.
-  
+
 ### Checking our Assumptions
 
 #### The Mean of ε is ZERO
-
 The first assumption that we will check is that the mean of the error term, ε, is zero. This assumption means that the model is not biased.
 ```{r}
-residuals = Model1$residuals
-mean(residuals)
+residuals_2 = reg2$residuals
+mean(residuals_2)
 ```
-
 As you can see from the above code, the mean of the residuals is approximately zero, therefore we can check off this assumption.
-
 
 #### Constant Variance
 The second assumption that we will check is that we have constant variance.
-
-```{r}
-plot(Model1, 1)
+```{r, echo = FALSE}
+plot(reg2, 1)
 ```
-
 
 This assumption may not hold exactly because we can see that the residuals do not have constant variance for all values and the residual line is slightly skewed up.
 
 #### Error Term is Normal
-
 The next assumption that we check is that error term is normal.
-
-```{r}
-plot(Model1, 2)
+```{r, echo = FALSE}
+plot(reg2, 2)
 ```
-
 From the QQ plot above, with its distribution, we can conclude that the assumption that the error term of ε is mostly normal with some of the data points being slightly under or below the line.
-
 
 #### ϵi are Independent
 In order to test this assumption, we would need to have a time variable included in the model. However, there is no time variable in the regression model to test this hypothesis.
 
-
-### Performing tests
+### Performing Tests
 Now that we have checked our assumptions, we will move forward with reporting our test statistics and p-values for our tests. It will be important to note that we will need to proceed with caution because assumption 2, constant variance, is not met within our current data set.
 
-
 #### F Test for Overall Model Significance
-
-First, we will examine the F-test statistic to determine if the multiple regression model that uses horsepower, number of cylinders and the interaction between them as a predictor of price.
-
 ```{r}
-summary(Model1)
+summary(reg2)
 ```
-
-```{r}
-anova(Model1)
-```
-
-
-
 As shown by the summary, the F-statistic of this test is 171.1. There is a p-value reported of <0.001, meaning that we can reject our null hypothesis. From our test, we can conclude that we can reject our null hypothesis and say that at least one of predictor of horsepower, number of cylinders and the interaction term are significant predictors of car price. However, it is important to proceed with caution with this because not all of our assumptions above were met.
 
 An adjusted R2 value of 0.7144 implies that 71.44% of the variation in car price can be explained by the regression relationship between horsepower and number of cylinders. In addition, a RMSE value of 4269 shows that there is a higher average size of the residuals. This means we should proceed with caution.
 
 
 #### T Test for Individual Variable Significance
-
 While it is important to show how these variables work together, it is also important to check if they are significant predictors on their own. For this, we will reference the above summary and perform one-sample t-tests.
 
 The predictor variable of number of cylinders has a test statistic value of 5.602 With a p-value of less than 0.001, we can conclude that we can reject our null hypothesis and say that number of cylinders is a significant predictor of car price in our multiple regression model.
 
 The predictor variable of horsepower has a test statistic value of 8.221, With a p-value of less than 0.001, we can conclude that we can reject our null hypothesis and say that horsepower is a significant predictor of car price in our multiple regression model.
 
-### Interaction Terms
-
+#### Interaction Terms
 The interaction between horsepower and cylinder number shows how the effect of horsepower on the car price changes depending on the level of the other predictor, cylinder number. Since the p-value for the interaction terms is <0.001, the effect of one predictor on car price significantly changes depending on the level of the other predictor.
 
 
-
 ## Curb Weight and Horsepower are statistically significant predictors of a City MPG
-
-
 ```{r, include = FALSE}
 reg3 = lm(citympg~curbweight+horsepower, data = car_price )
 options(scipen = 999)
