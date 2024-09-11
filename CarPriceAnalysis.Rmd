@@ -317,9 +317,85 @@ Now that we have identified, three potential hypotheses to test we need to test 
 ## Horsepower and Amount of Cylinders is a Statistically Significant Predictor of Car Price
 
 ## Curb Weight and Horsepower are statistically significant predictors of a City MPG
+```{r, include = FALSE}
+reg3 = lm(citympg~curbweight+horsepower, data = car_price )
+options(scipen = 999)
+summary(reg3)
+anova(reg3) ## SSE
+```
 
 
+### Establishing our null and alternative hypothesis
+As we discussed above, we plan on running an F-test to test the overall significance of both the curb weight of the car and horsepower as a predictor of city miles per gallon. 
 
+In order to test the significance of the overall regression model, we establish the null and alternative hypothesis as such:
+    - Null Hypothesis: β1 = β2 = 0. This means that none of the variables have an overall significance in the regression model
+    - Alternative Hypothesis: At least one βn ≠ 0. This means that at least one predictor variable is significant in our multiple regression model.
+    
+    
+In addition to testing the significance of the overall regression model, we will test the significance of each individual predictor variable in our model, curbweight and horsepower. We will use a t-test to compute these test statistics with the null and alternative hypothesis as such:
+  - Null Hypothesis: βn = 0. This means that the predictior variable we are examining is not significant in our model.
+  - Alternative Hypothesis: βn ≠ 0. This means that the individual predictor variable is significant in the overall model.
+    
+
+### Checking our Assumptions
+
+#### The Mean of ε is ZERO
+The first assumption that we will check is that the mean of the error term, ε, is zero. This assumption means that the model is not biased.
+```{r}
+residuals = reg3$residuals
+mean(residuals)
+```
+As you can see from the above code, the mean of the residuals is approximately zero, therefore we can check off this assumption.
+
+#### Constant Variance
+The second assumption that we will check is that we have constant variance.
+```{r, echo = FALSE}
+library(ggplot2)
+ggplot(reg3, aes(.fitted, .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(x = "Fitted values", y = "Residuals") +
+  ggtitle("Residuals vs Fitted")
+```
+
+This assumption may not hold exactly because we can see that the residuals do not have constant variance for all values.
+
+#### Error Term is Normal
+The next assumption that we check is that error term is normal. 
+```{r, echo = FALSE}
+# Q-Q plot
+ggplot(reg3, aes(sample = .resid)) +
+  stat_qq() +
+  stat_qq_line() +
+  ggtitle("Q-Q Plot")
+
+```
+
+From the QQ plot above, with its distribution, we can conclude that the assumption that the error term of ε is normal.
+
+#### ϵi are Independent
+In order to test this assumption, we would need to have a time variable included in the model. However, there is no time variable in the regression model to test this hypothesis.
+
+### Performing tests
+Now that we have checked our assumptions, we will move forward with reporting our test statistics and p-values for our tests. It will be important to note that we will need to proceed with caution because assumption 2, constant variance, is not met within our current data set.
+
+#### F Test for Overall Model Significance
+First, we will examine the F-test statistic to determine if the multiple regression model that uses curb weight and horsepower as a predictor of city miles per gallon.
+```{r}
+summary(reg3)
+```
+As shown by the summary, the F-statistic of this test is 233.3. There is a p-value reported of <0.05, meaning that we can reject our null hypothesis. From our test, we can conclude that we can reject our null hypothesis and say that at least one of predictor of curb weight and horsepower are significant predictors of city mpg. However, it is important to proceed with caution with this because not all of our assumptions above were met.
+
+An adjusted R2 value of 0.6949 implies that 69.49% of the variation in city miles per gallon can be explained by the regression relationship between curb weight and horsepower. In addition, a RMSE value of 3.614 shows that there is relatively low error in the model.
+
+
+#### T Test for Individual Variable Significance
+While it is important to show how these variables work together, it is also important to check if they are significant predictors on their own. For this, we will reference the above summary and perform one-sample t-tests.
+
+The predictor variable of curb weight has a test statistic value of -6.096. With a p-value of less than 0.05, we can conclude that we can reject our null hypothesis and say that curb weight is a significant predictor of city mpg in our multiple regression model.
+
+The predictor variable of horsepower has a test statistic value of -9.114, With a p-value of less than 0.05, we can conclude that we can reject our null hypothesis and say that horsepower is a significant predictor of city mpg in our multiple regression model.
 
 
 
