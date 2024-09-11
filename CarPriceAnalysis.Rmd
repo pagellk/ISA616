@@ -314,7 +314,10 @@ Now that we have identified, three potential hypotheses to test we need to test 
 
 ## Curb Weight is a Statistically Significant Predictor of Car Price
 
-
+reg1=lm(price~curbweight, data = car_price)
+options(scipen = 999)
+summary(reg1)
+anova(reg1)
 
 ## Horsepower and Amount of Cylinders is a Statistically Significant Predictor of Car Price
 
