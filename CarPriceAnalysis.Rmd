@@ -318,10 +318,6 @@ reg1 = lm(price~curbweight, data = car_price )
 options(scipen = 999)
 summary(reg1)
 anova(reg1) ## SSE
-
-The p-value from our hypothesis is far less than .05, meaning that we can reject the null hypothesis and conclude that curb weight is a statistically significant predictor of car price. 
-
-
 ```
 
 
