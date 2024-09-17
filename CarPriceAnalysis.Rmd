@@ -313,11 +313,17 @@ After building the regression model, we will examine the F test statistic in ord
 Now that we have identified, three potential hypotheses to test we need to test them to see if they hold true in our model
 
 ## Curb Weight is a Statistically Significant Predictor of Car Price
-```{r, include = FALSE}
+```{r}
 reg1 = lm(price~curbweight, data = car_price )
-options(scipen = 999)
-summary(reg1)
-anova(reg1) ## SSE
+```
+```{r, echo = FALSE}
+# Load the necessary libraries
+ggplot2::ggplot(car_price, ggplot2::aes(x = curbweight, y = price)) +
+  ggplot2::geom_point() +  # Scatter plot
+  ggplot2::geom_smooth(method = "lm", se = FALSE, color = "blue") +  # Best fit line
+  ggplot2::labs(title = "Scatterplot of Price vs. Curbweight",
+                x = "Curbweight",
+                y = "Price")
 ```
 
 
@@ -375,6 +381,7 @@ reg2 <- lm(price ~ horsepower + cylinder.number + horsepower:cylinder.number, da
 ```
 
 
+
 ### Establishing our Null and Alternative Hypothesis
 As we discussed above, we plan on running an F-test to test the overall significance of both the horsepower of the car, the amount of cylinders and the interaction between them as a predictor of car price.
 
@@ -414,6 +421,7 @@ The next assumption that we check is that error term is normal.
 ```{r, echo = FALSE}
 plot(reg2, 2)
 ```
+
 From the QQ plot above, with its distribution, we can conclude that the assumption that the error term of ε is mostly normal with some of the data points being slightly under or below the line.
 
 #### ϵi are Independent
@@ -443,12 +451,10 @@ The interaction between horsepower and cylinder number shows how the effect of h
 
 
 ## Curb Weight and Horsepower are statistically significant predictors of a City MPG
-```{r, include = FALSE}
+```{r}
 reg3 = lm(citympg~curbweight+horsepower, data = car_price )
-options(scipen = 999)
-summary(reg3)
-anova(reg3) ## SSE
 ```
+
 
 
 ### Establishing our null and alternative hypothesis
@@ -497,6 +503,8 @@ ggplot(reg3, aes(sample = .resid)) +
   ggtitle("Q-Q Plot")
 
 ```
+
+
 
 From the QQ plot above, with its distribution, we can conclude that the assumption that the error term of ε is normal.
 
