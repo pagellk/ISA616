@@ -532,5 +532,64 @@ The predictor variable of curb weight has a test statistic value of -6.096. With
 The predictor variable of horsepower has a test statistic value of -9.114, With a p-value of less than 0.05, we can conclude that we can reject our null hypothesis and say that horsepower is a significant predictor of city mpg in our multiple regression model.
 
 
+# Business Value Proposition
+
+```{r, echo=FALSE}
+knitr::include_graphics("/Users/livib/OneDrive/ISA616/ISA616/Car BVP.png")
+```
+
+## 1. Client
+
+The client for this is a Chinese car company, Geely Auto. The client is trying to enter the US Market and setting up their manufacturing unit in the U.S. They are also trying to have a competitive edge and give competition for their US and European counterparts. 
+
+
+## 2. Client Jobs
+
+The client, Geely Auto, is trying to enter the US car market and setting up a manufacturing unit in the US. The client is trying to understand the factors affecting the pricing of cars in the American car market. They are also learning to understand different cultural differences between the two markets and the consumers within it. Geely Auto also needs to understand there are different factors the impact the price of the car and American's value different aspects of cars that might differ from the Chinese market which the client is used to. 
+
+
+## 3. Client Pains
+
+One pain that Geely Auto may be experiencing is due to the fact that they are coming over from China, and may not understand the American market base. Because they are coming from a different country and culture, Geely Auto has to understand the differences in consumer and working cultures. In addition, consumers from these two countries may have different preferences as it relates to sizes and models of cars. For example, one culture may like having trucks more than others so this may impact the product portfolio offerings. In addition, the two countries may have different business and approaches to manufacturing that may impact the company's bottom line.
+
+
+Through our analysis, we found that the curb weight of the car is a significant predictor of car price. With further research, we learned that different sized vehicles have price points that are grouped in relativity to a vehicle’s size. For example, large trucks often have more material that is required in order to build them as opposed to smaller sedan vehicles. So, as a result these large trucks are often more expensive in terms of price. However, they are structured differently in terms of profit margins which is important for Geely to consider has they try to decide which types of cars they should spend time producing.
+
+
+Another pain that Geely Auto may find as they explore what features impact the price of the car, is that some features compromise the performance of others as they are added to the vehicle model. For example, we found that in our research, features such as the weight of the car and the horsepower may negatively impact the fuel efficiency of the vehicle. Different consumers may have different interpretations of what they value and are willing to spend on a car based on their needs and preferences. These features often interact together to impact price, so it is important to consider their effects together as opposed to isolated ones.
+ 
+
+
+## 4. Client Gains
+
+From moving from China to the US, one gain that Geely can expect to see is increased market share in the US market. This will allow a larger customer base to become more knowledgeable about Geely and its products, thus making their company more available and accessible to new consumers, and leading to new sales opportunities.
+
+Another gain that Geely can expect is an increased return on their investment from moving to the US. While it will be costly to set up a manufacturing plant in the US, the company will ultimately become available to a wider consumer base thus leading to increased sales and profits for the company, which makes it an enticing opportunity.
+
+An additional gain that Geely can expect from our solution is the creation of a brand identity that relates to an American audience. Coming from China, Geely Auto currently does not understand the American market enough to be a competitor within an already established market space. With our knowledge and insights, we will be able to provide Geely with more information, allowing them to create a brand identity that allows them to appeal to American consumers and capture their business.
+
+
+
+## 5. Intended Solution
+
+For the intended solution Geely Auto should be more aware of how the cars should be priced in the American market. We want to make Geely Auto aware of what is considered too expensive or too cheap so they can sell cars and enter into the market, but still have a competitive advantage. We want to give insights on the American market, more specifically on what features can impact car price. We will give a better understanding of what types of cars are preferred in the American market. For example, many American consumers prefer bigger cars such as trucks or cars with more horsepower. Both preferences require more materials which can increase the price of cars. The more cars made are geared towards the American consumer preferences that can equate to higher price points and profits. 
+
+Another solution for Geely Auto is building brand awareness and investing in marketing campaigns to ensure trust among consumers. Also by establishing partnerships with local dealers can create a reliable network for sales and customers. Geely Auto also needs to be able to adapt to local needs such as vehicle features and services to meet specific needs and perferences of different American consumers since there is such a difference in landscapes and terrain across the entire US. 
+
+
+## 6. Pain Killers
+
+Through our solution, we will be able to ease Geely Auto’s transition to America by providing them with the knowledge and resources they need to understand the American market and consumers. Through this, they will also be able to better understand what specific features of a car impact the price of a vehicle, specifically in the US.
+
+In addition, our solution will also relieve the pain of trying to understand how different parts of a vehicle interact with one another. Through our analyses, we tested the interactions between variables and how some affected others. Geely Auto will be able to take this information and translate it into their business model when deciding which features of a car to prioritize for the American market.
+
+
+## 7. Gain Creators
+
+From our solution, Geely will be able to create models of cars that directly appeal to the American consumer and market. This is because our analysis will allow them to have a more holistic picture of which features impact car price the most in America. Having this understanding will ultimately help ease the transition from the Chinese to American market for Geely and set them up for success in a new place. 
+
+In addition, our insights and solution will allow Geely Auto to capture more market share and audience base through their expansion efforts to America. This is because they will have the tools they need to better understand pricing within the American market, allowing them to stay competitive with their American and European competitors. In turn, we hope that this will also contribute to additional revenue and profits for Geely Auto through this wider consumer base, which will ultimately have a high payoff for the company’s bottom line.
+
+
 
 
